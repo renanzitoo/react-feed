@@ -5,6 +5,38 @@ import {Sidebar} from './components/Sidebar'
 import styles from './App.module.css'
 
 import './global.css'
+
+const posts = [
+  {
+    id: 1,
+    author: {
+      avatarUrl: 'https://github.com/renanzitoo.png',
+      name: 'Renan Costa',
+      role: 'Back-End',
+    },
+    content: [
+      {type: 'paragraph', content: 'Fala galeraa 👋', },
+      {type: 'paragraph', content: 'Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀', },
+      {type: 'link', content: 'jane.design/doctorcare',},
+    ],
+    publishedAt: new Date('2022-05-03 20:00:00')
+  },
+  {
+    id: 2,
+    author: {
+      avatarUrl: 'https://github.com/Lehcarneiro.png',
+      name: 'Leticia Carneiro',
+      role: 'Game Developer',
+    },
+    content: [
+      {type: 'paragraph', content: 'Fala galeraa 👋', },
+      {type: 'paragraph', content: 'Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀', },
+      {type: 'link', content: 'jane.design/doctorcare',},
+    ],
+    publishedAt: new Date('2022-05-03 20:00:00')
+  },
+];
+
 function App() {
   return (
     <div>
@@ -12,13 +44,16 @@ function App() {
       <div className={styles.wrapper}>
         <Sidebar/>
         <main>
-          <Post 
-            author="Renanzitoo" 
-            content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati velit aspernatur sunt qui repellat cum perferendis quos, odit asperiores cupiditate laboriosam maxime quaerat aliquam incidunt illum voluptatum ea eum aut."      
-          />
-          <Post 
-            author = "Lelezitaa"
-          />
+         {posts.map(post=>{
+            return (
+              <Post
+                key={post.id}
+                author = {post.author}
+                content= {post.content}
+                publishedAt = {post.publishedAt}
+              />
+            )
+         })}
         </main>
       </div>
     </div>
