@@ -10,9 +10,9 @@ import { useState } from 'react'
 
 export function Post({author, publishedAt, content }) {
   const [comments, setComments] = useState([
-    1,
-    2,
   ])
+
+  const [newCommentText, setNewCommentText] = useState('')
 
   const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'",
     {locale: ptBR}
@@ -25,9 +25,28 @@ export function Post({author, publishedAt, content }) {
 
   function handleCreateNewComment() {
     event.preventDefault()
-    setComments([...comments, comments.length+1]);
-    console.log(comments) 
+
+    setComments([...comments, newCommentText]);
+    setNewCommentText('')
   }
+
+  function handleNewCommentChange(){
+    event.target.setCustomValidity('')
+    setNewCommentText(event.target.value)
+  }
+
+  function handleNewCommentInvalid(){
+    event.target.setCustomValidity('Esse campo é obrigatório')
+  }
+
+  function deleteComment(commentToDelete){
+    const commentsWithoutDeletedOne = comments.filter( comment =>{
+      return comment != commentToDelete
+    })
+    setComments(commentsWithoutDeletedOne)
+  }
+
+  const isNewCommentEmpty = newCommentText.length === 0 
 
   return (
     <article className={styles.post}>
@@ -48,11 +67,11 @@ export function Post({author, publishedAt, content }) {
       <div className={styles.content}>
         {content.map(line=>{
           if(line.type === 'paragraph'){
-            // eslint-disable-next-line react/jsx-key
-            return <p>{line.content}</p>
+             
+            return <p key={line.content}>{line.content}</p>
           }else if (line.type === 'link'){
-            // eslint-disable-next-line react/jsx-key
-            return <p><a>{line.content}</a></p>
+             
+            return <p key={line.content}><a>{line.content}</a></p>
           }
         })}
       </div>
@@ -60,17 +79,22 @@ export function Post({author, publishedAt, content }) {
       <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Deixe seu feedback</strong>
         <textarea 
+          name="comment"
           placeholder='Deixe um comentario'
+          value={newCommentText}
+          onChange={handleNewCommentChange}
+          onInvalid={handleNewCommentInvalid}
+          required
         />
         <footer>
-        <button type='submit'>Comentar</button>
+        <button type='submit' disabled={isNewCommentEmpty}>Comentar</button>
         </footer>
       </form>
 
       <div className={styles.commentList}>
         {comments.map(comment=>{
-          // eslint-disable-next-line react/jsx-key
-          return <Comment />
+           
+          return <Comment key={comment} content={comment} deleteComment={deleteComment}/>
         })}
       </div>
     </article>
